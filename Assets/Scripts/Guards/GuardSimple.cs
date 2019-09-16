@@ -12,6 +12,9 @@ public class GuardSimple : MonoBehaviour
     public float turnSpeed = 1.0f;
 
     private int currentWaypoint = 0;
+
+    private Vector3[] waypoints;
+
     void OnDrawGizmos()
     {
         var startPosition = pathHolder.GetChild(0).position;
@@ -28,7 +31,7 @@ public class GuardSimple : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var waypoints = new Vector3[pathHolder.childCount];
+        waypoints = new Vector3[pathHolder.childCount];
         for (int i = 0; i < waypoints.Length; i++)
         {
             waypoints[i] = pathHolder.GetChild(i).position;
@@ -39,7 +42,7 @@ public class GuardSimple : MonoBehaviour
 
         torch.parent = transform;
 
-        StartCoroutine(FollowPath(waypoints));
+        StartCoroutine(FollowPath(waypoints, 0));
     }
 
     // Update is called once per frame
@@ -52,18 +55,21 @@ public class GuardSimple : MonoBehaviour
         var dir = (lookTarget - transform.position).normalized;
         float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
 
-        while (Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle) > 0.05f)
+        var deltaAngle = Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle);
+        while (deltaAngle > 0.05f || deltaAngle < -0.05f)
         {
             float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, turnSpeed * Time.deltaTime);
-            transform.eulerAngles = Vector3.forward * angle;
+            transform.eulerAngles = transform.forward * angle;
+            Debug.DrawRay(transform.position, transform.forward, Color.green);
+            deltaAngle = Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle);
             yield return null;
         }
     }
 
-    IEnumerator FollowPath(Vector3[] waypoints)
+    IEnumerator FollowPath(Vector3[] waypoints, int startingIndex)
     {
-        int targetWaypointIndex = (currentWaypoint + 1) % waypoints.Length;
-        transform.Translate(waypoints[currentWaypoint]);
+        int targetWaypointIndex = startingIndex;
+        transform.Translate(waypoints[targetWaypointIndex]);
         var targetWaypoint = waypoints[targetWaypointIndex];
 
         var dir = (targetWaypoint - transform.position).normalized;
