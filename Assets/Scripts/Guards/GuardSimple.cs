@@ -41,13 +41,19 @@ public class GuardSimple : MonoBehaviour
         torch.rotation = new Quaternion(transform.rotation.z, -90, -90, transform.rotation.w);
 
         torch.parent = transform;
-
         StartCoroutine(FollowPath(waypoints, 0));
     }
 
     // Update is called once per frame
     void Update()
     {
+        DrawOrientationLines(gameObject);
+    }
+
+    private void DrawOrientationLines(GameObject gameObject)
+    {
+        Debug.DrawRay(gameObject.transform.position, gameObject.transform.up * 5, Color.green);
+        Debug.DrawRay(gameObject.transform.position, gameObject.transform.right * 5, Color.red);
     }
 
     IEnumerator TurnToFace(Vector3 lookTarget)
