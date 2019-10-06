@@ -146,13 +146,14 @@ public class FieldOfView : MonoBehaviour
     private float FindPlayer()
     {
         player = null;
-        var playerInRadius = Physics2D.OverlapCircle(transform.position, viewRadius, playerMask);
+        var playersInRadius = Physics.OverlapSphere(transform.position, viewRadius, playerMask);
 
-        if (playerInRadius == null)
+        if (playersInRadius == null || playersInRadius.Length == 0)
         {
             return float.MaxValue;
         }
-        
+
+        var playerInRadius = playersInRadius[0];
         var playerDistance = playerInRadius.transform.position - transform.position;
         var playerDirection = playerDistance.normalized;
         if (Vector3.Angle(transform.up, playerDirection) >= viewAngle / 2)
