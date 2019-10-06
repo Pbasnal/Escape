@@ -1,19 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GuardSimple : MonoBehaviour
 {
     public Transform pathHolder;
-    public Transform torch;
-
-    public float speed = 1f;
-    public float waitTime = 0.3f;
+    
+    public float moveSpeed = 1f;
     public float turnSpeed = 1.0f;
 
-    private int currentWaypoint = 0;
-
-    private Vector3[] waypoints;
+    public int currentWaypoint = 0;
+    public Vector3[] waypoints;
 
     void OnDrawGizmos()
     {
@@ -28,20 +23,18 @@ public class GuardSimple : MonoBehaviour
         Gizmos.DrawLine(previousPosition, startPosition);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         waypoints = new Vector3[pathHolder.childCount];
         for (int i = 0; i < waypoints.Length; i++)
         {
             waypoints[i] = pathHolder.GetChild(i).position;
         }
+    }
 
-        torch.position = new Vector3(transform.position.x, transform.position.y, -0.01f);
-        torch.rotation = new Quaternion(transform.rotation.z, -90, -90, transform.rotation.w);
-
-        torch.parent = transform;
-        StartCoroutine(FollowPath(waypoints, 0));
+    // Start is called before the first frame update
+    void Start()
+    {   
     }
 
     // Update is called once per frame
@@ -50,51 +43,16 @@ public class GuardSimple : MonoBehaviour
         DrawOrientationLines(gameObject);
     }
 
+    public void PlayerFound(Transform player)
+    {
+        Debug.Log("PlayerFound");
+    }
+
     private void DrawOrientationLines(GameObject gameObject)
     {
         Debug.DrawRay(gameObject.transform.position, gameObject.transform.up * 5, Color.green);
         Debug.DrawRay(gameObject.transform.position, gameObject.transform.right * 5, Color.red);
     }
 
-    IEnumerator TurnToFace(Vector3 lookTarget)
-    {
-        var dir = (lookTarget - transform.position).normalized;
-        float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
-
-        var deltaAngle = Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle);
-        while (deltaAngle > 0.05f || deltaAngle < -0.05f)
-        {
-            float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, turnSpeed * Time.deltaTime);
-            transform.eulerAngles = transform.forward * angle;
-            Debug.DrawRay(transform.position, transform.forward, Color.green);
-            deltaAngle = Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle);
-            yield return null;
-        }
-    }
-
-    IEnumerator FollowPath(Vector3[] waypoints, int startingIndex)
-    {
-        int targetWaypointIndex = startingIndex;
-        transform.Translate(waypoints[targetWaypointIndex]);
-        var targetWaypoint = waypoints[targetWaypointIndex];
-
-        var dir = (targetWaypoint - transform.position).normalized;
-        float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
-
-        float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, 100);
-        transform.eulerAngles = Vector3.forward * angle;
-
-        while (true)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
-            if (transform.position == targetWaypoint)
-            {
-                targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
-                targetWaypoint = waypoints[targetWaypointIndex];
-                yield return new WaitForSeconds(waitTime);
-                yield return StartCoroutine(TurnToFace(targetWaypoint));
-            }
-            yield return null;
-        }
-    }
+    
 }
