@@ -42,7 +42,7 @@ public class DeaccelerationState : IBehaviourState<IMove, MovementState>
         else
         {
             Debug.Log("pos: " + (gameObject.Transform.position + velocity));
-            gameObject.Rigidbody2d.MovePosition(gameObject.Transform.position + velocity);
+            gameObject.Rigidbody.MovePosition(gameObject.Transform.position + velocity);
             gameObject.PreviousVelocity = velocity;
         }        
     }

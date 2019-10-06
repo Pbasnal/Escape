@@ -35,7 +35,7 @@ public class AccelerationState : IBehaviourState<IMove, MovementState>
         }
         else
         {
-            gameObject.Rigidbody2d.MovePosition(gameObject.Transform.position + gameObject.PreviousVelocity);
+            gameObject.Rigidbody.MovePosition(gameObject.Transform.position + gameObject.PreviousVelocity);
         }
     }
 }

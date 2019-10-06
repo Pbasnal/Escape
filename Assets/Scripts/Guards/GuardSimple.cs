@@ -6,9 +6,15 @@ public class GuardSimple : MonoBehaviour
     
     public float moveSpeed = 1f;
     public float turnSpeed = 1.0f;
-
     public int currentWaypoint = 0;
+    public int alertDurationInSecs = 5;
     public Vector3[] waypoints;
+
+    [HideInInspector]
+    public Transform target;
+    public FieldOfView fieldOfView;
+
+    private Animator animator;
 
     void OnDrawGizmos()
     {
@@ -30,6 +36,9 @@ public class GuardSimple : MonoBehaviour
         {
             waypoints[i] = pathHolder.GetChild(i).position;
         }
+
+        fieldOfView = gameObject.GetComponent<FieldOfView>();
+        animator = gameObject.GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -45,7 +54,44 @@ public class GuardSimple : MonoBehaviour
 
     public void PlayerFound(Transform player)
     {
-        Debug.Log("PlayerFound");
+        target = player;
+        animator.SetBool("TargetInView", true);
+        animator.SetBool("TargetLost", false);
+    }
+
+    public void PlayerLost()
+    {
+        animator.SetBool("TargetInView", false);
+    }
+
+    public void TurnToTarget(Vector3 lookTarget)
+    {
+        var dir = (lookTarget - transform.position).normalized;
+        var targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
+
+        var deltaAngle = Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle);
+        if (deltaAngle > 0.05f || deltaAngle < -0.05f)
+        {
+            float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.z,
+                targetAngle,
+                turnSpeed * Time.deltaTime * Mathf.Abs(deltaAngle));
+            transform.eulerAngles = transform.forward * angle;
+        }
+        else
+        {
+            transform.eulerAngles = transform.forward * targetAngle;
+        }
+    }
+
+    public void MoveForward()
+    {
+        transform.position = transform.position + transform.up * moveSpeed * Time.deltaTime;
+
+        var distanceFromCurrentWaypoint = (transform.position - waypoints[currentWaypoint]).magnitude;
+        if (distanceFromCurrentWaypoint < 0.1f)
+        {
+            currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
+        }
     }
 
     private void DrawOrientationLines(GameObject gameObject)

@@ -1,34 +1,22 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class EnemyPatrol : StateMachineBehaviour
+public class ChaseTarget : StateMachineBehaviour
 {
-    protected GuardSimple guard;
- 
+    GuardSimple guard;
+
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         guard = animator.gameObject.GetComponent<GuardSimple>();
-
-        var minDist = float.MaxValue;
-        int closestWaypoint = 0;
-
-        for (int i = 0; i < guard.waypoints.Length; i++)
-        {
-            var distance = (guard.transform.position - guard.waypoints[i]).magnitude;
-            if (distance < minDist)
-            {
-                closestWaypoint = i;
-                minDist = distance;
-            }
-        }
-
-        guard.currentWaypoint = closestWaypoint;
+        guard.fieldOfView.IncreaseFieldOfView();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        guard.TurnToTarget(guard.waypoints[guard.currentWaypoint]);
+        guard.TurnToTarget(guard.target.position);
         guard.MoveForward();
     }
 
@@ -38,5 +26,15 @@ public class EnemyPatrol : StateMachineBehaviour
         
     }
 
-    
+    // OnStateMove is called right after Animator.OnAnimatorMove()
+    //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    // Implement code that processes and affects root motion
+    //}
+
+    // OnStateIK is called right after Animator.OnAnimatorIK()
+    //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    // Implement code that sets up animation IK (inverse kinematics)
+    //}
 }

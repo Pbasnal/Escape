@@ -5,20 +5,35 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
-    public float viewRadius;
     public float meshResolution;
+    
+    public float viewRadiusMin;
     [Range(0, 360)]
-    public float viewAngle;
+    public float viewAngleMin;
+
+    public float viewRadiusMax;
+    [Range(0, 360)]
+    public float viewAngleMax;
 
     public LayerMask playerMask;
     public LayerMask obstacleMask;
 
     public MeshFilter viewMeshFilter;
-    Mesh viewMesh;
 
     [HideInInspector]
     public GuardSimple guard;
+    [HideInInspector]
     public Transform player;
+
+
+    [HideInInspector]
+    public float viewRadius;
+    [HideInInspector]
+    public float viewAngle;
+
+    private Mesh viewMesh;
+    private bool playerFoundCalled = false;
+    private bool playerLostCalled = false;
 
     public struct ViewCastInfo
     {
@@ -43,20 +58,47 @@ public class FieldOfView : MonoBehaviour
 
     void Start()
     {
+        viewRadius = viewRadiusMin;
+        viewAngle = viewAngleMin;
+
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
-        StartCoroutine("FindPlayerWithDelay", .2f);
     }
 
-    IEnumerator FindPlayerWithDelay(float delay)
+
+    void Update()
     {
-        while (true)
+        FindPlayer();
+
+        if (player != null && !playerFoundCalled)
         {
-            yield return new WaitForSeconds(delay);
-            FindPlayer();
+            guard.PlayerFound(player);
+
+            playerFoundCalled = true;
+            playerLostCalled = false;            
+        }
+        else if (player == null && !playerLostCalled)
+        {
+            guard.PlayerLost();
+
+            playerLostCalled = true;
+            playerFoundCalled = false;
         }
     }
+
+    public void IncreaseFieldOfView()
+    {
+        viewRadius = viewRadiusMax;
+        viewAngle = viewAngleMax;
+    }
+
+    public void DeccreaseFieldOfView()
+    {
+        viewRadius = viewRadiusMin;
+        viewAngle = viewAngleMin;
+    }
+
 
     void LateUpdate()
     {
@@ -101,28 +143,31 @@ public class FieldOfView : MonoBehaviour
         viewMesh.RecalculateNormals();
     }
 
-    private void FindPlayer()
+    private float FindPlayer()
     {
         player = null;
         var playerInRadius = Physics2D.OverlapCircle(transform.position, viewRadius, playerMask);
 
         if (playerInRadius == null)
         {
-            return;
+            return float.MaxValue;
         }
-        player = playerInRadius.transform;
-        var playerDirection = (player.position - transform.position).normalized;
+        
+        var playerDistance = playerInRadius.transform.position - transform.position;
+        var playerDirection = playerDistance.normalized;
         if (Vector3.Angle(transform.up, playerDirection) >= viewAngle / 2)
         {
-            return;
+            return float.MaxValue;
         }
-        var distToPlayer = Vector3.Distance(transform.position, player.position);
-        var obstacleInBetween = Physics2D.Raycast(transform.position, playerDirection, distToPlayer, obstacleMask);
+        var distToPlayer = Vector3.Distance(transform.position, playerInRadius.transform.position);
+        var obstacleInBetween = Physics.Raycast(transform.position, playerDirection, distToPlayer, obstacleMask);
         if (obstacleInBetween)
         {
-            return;
+            return float.MaxValue;
         }
-        guard.PlayerFound(player);
+
+        player = playerInRadius.transform;
+        return playerDistance.magnitude;
     }
 
     private ViewCastInfo ViewCast(float globalAngle)

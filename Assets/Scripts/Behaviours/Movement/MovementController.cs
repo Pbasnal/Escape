@@ -13,7 +13,7 @@ public class MovementController : MonoBehaviour, IMove
     public float TimeToMaxVelocitySec => timeToMaxVelocitySec;
     public float TimeToZeroVelocitySec => timeToZeroVelocitySec;
     public Transform Transform => gameObject.transform;
-    public Rigidbody2D Rigidbody2d => m_rigidbody2d;
+    public Rigidbody Rigidbody => m_rigidbody;
     public MovementState CurrentState
     {
         get { return currentState; }
@@ -26,7 +26,7 @@ public class MovementController : MonoBehaviour, IMove
         set { m_previousVelocity = value; }
     }
 
-    private Rigidbody2D m_rigidbody2d;
+    private Rigidbody m_rigidbody;
     private Vector3 m_previousVelocity;
     private BehaviourStateMachine<IMove, MovementState> movementMachine;
 
@@ -42,7 +42,7 @@ public class MovementController : MonoBehaviour, IMove
 
         movementMachine.ChangeState(MovementState.NotMoving);
 
-        m_rigidbody2d = gameObject.GetComponent<Rigidbody2D>();
+        m_rigidbody = gameObject.GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
