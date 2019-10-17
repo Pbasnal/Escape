@@ -146,7 +146,7 @@ Grid:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414151300}
   m_Enabled: 1
-  m_CellSize: {x: 1, y: 1, z: 0}
+  m_CellSize: {x: 10, y: 10, z: 0}
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
@@ -177,17 +177,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelSize: {fileID: 11400000, guid: b0130bb4abb37644a853440cc80f29b6, type: 2}
-  roomCollection:
-    rooms:
-    - {fileID: 8837403846058275230, guid: f57d6f3fe5c695946a70c5ae27387828, type: 3}
-    - {fileID: 2758691616241514867, guid: 75810d7503f749d4d9feeffaded35c6b, type: 3}
-    - {fileID: 2118322844803082297, guid: 22540bf2866e09941b7a40a679ba03d0, type: 3}
-    - {fileID: 3466442842694463964, guid: ba4c7ba158c992c4091b340b9a5ac093, type: 3}
-    supportedRoomTypes:
-    - {fileID: 11400000, guid: 053ed2b9dda67ad44a02a8099a6ac54b, type: 2}
-    - {fileID: 11400000, guid: 7d001d05af52db44bbf48f057f5b5eb1, type: 2}
-    - {fileID: 11400000, guid: 212f3fbcada7c5c41ae5253bd077f41e, type: 2}
-    - {fileID: 11400000, guid: 7838bebe65afaf047adfc9b6ddc6ce3a, type: 2}
+  gridRoomLayoutController: {fileID: 11400000, guid: 7dea25c4d59678c40a70023d61c14b1d,
+    type: 2}
+  mainPathMarker: {fileID: 6774195401708739491, guid: a6f5a00629aa6404f8dee56ba43f325c,
+    type: 3}
 --- !u!1 &1179849169
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,7 +234,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 30
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
