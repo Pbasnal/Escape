@@ -7,8 +7,9 @@ public class SpelunkyRoomLayoutGenerator : GridRoomLayoutController
 {
     public List<Room> rooms;
     private IDictionary<int, Room> _roomsHash;
+    private List<Room> possibleRooms = new List<Room>();
 
-    public override int[,] GenerateRoomLayout(LevelSize levelSize)
+    public override void Init()
     {
         _roomsHash = new Dictionary<int, Room>();
         for (int i = 0; i < rooms.Count; i++)
@@ -16,7 +17,10 @@ public class SpelunkyRoomLayoutGenerator : GridRoomLayoutController
             rooms[i].roomId = i;
             _roomsHash.Add(rooms[i].roomId, rooms[i]);
         }
+    }
 
+    private int[,] CreateBaseLevelLayout(LevelSize levelSize)
+    {
         var layout = new int[levelSize.heightInGrids, levelSize.widthInGrids];
 
         for (int i = 0; i < levelSize.heightInGrids; i++)
@@ -26,14 +30,11 @@ public class SpelunkyRoomLayoutGenerator : GridRoomLayoutController
                 layout[i, j] = -1;
             }
         }
+        return layout;
+    }
 
-        int enterDirection = 0;
-        var currentLocation = new LevelSize
-        {
-            heightInGrids = levelSize.heightInGrids - 1,
-            widthInGrids = UnityEngine.Random.Range(0, levelSize.widthInGrids)
-        };
-
+    private int[,][] GetDirectionsMap()
+    {
         /* 1 - Left
          * 2 - Right
          * 3 - Up
@@ -52,27 +53,47 @@ public class SpelunkyRoomLayoutGenerator : GridRoomLayoutController
         directions[2, 1] = directions[2, 2] = directions[0, 0];
         directions[2, 3] = directions[1, 0];
 
-        var possibleRooms = new List<Room>();
+        return directions;
+    }
 
+    private List<Room> GetPossibleRooms(int[,] layout, LevelSize currentLocation, int enterDirection, int exitDirection)
+    {
+        possibleRooms.Clear();
+        foreach (var room in rooms)
+        {
+            var isRoomPossible = room.IsRoomPossible(layout, currentLocation, enterDirection, exitDirection);
+            if (isRoomPossible)
+            {
+                possibleRooms.Add(room);
+            }
+        }
+
+        return possibleRooms;
+    }
+
+    public override int[,] GenerateRoomLayout(LevelSize levelSize)
+    {
+        var layout = CreateBaseLevelLayout(levelSize);
+        int enterDirection = 0;
+        var currentLocation = new LevelSize
+        {
+            heightInGrids = levelSize.heightInGrids - 1,
+            widthInGrids = UnityEngine.Random.Range(0, levelSize.widthInGrids)
+        };
+
+        var directions = GetDirectionsMap();
         var generationStartTime = DateTime.UtcNow;
         var retries = 0;
         while (currentLocation.heightInGrids >= 0 && retries < 5)
         {
-            int selectedRoom;
+            int selectedRoom = 0;
+            int i = enterDirection;
+            int j = currentLocation.widthInGrids;
+            int exitDirection = 0;
             try
             {
-                var i = enterDirection;
-                var j = currentLocation.widthInGrids;
-                int exitDirection = directions[i, j][UnityEngine.Random.Range(0, directions[i, j].Length)];
-
-                foreach (var room in rooms)
-                {
-                    var isRoomPossible = room.IsRoomPossible(layout, currentLocation, enterDirection, exitDirection);
-                    if (isRoomPossible)
-                    {
-                        possibleRooms.Add(room);
-                    }
-                }
+                exitDirection = directions[i, j][UnityEngine.Random.Range(0, directions[i, j].Length)];
+                possibleRooms = GetPossibleRooms(layout, currentLocation, enterDirection, exitDirection);
 
                 if (possibleRooms.Count == 0)
                 {
@@ -82,25 +103,21 @@ public class SpelunkyRoomLayoutGenerator : GridRoomLayoutController
                 }
                 retries = 0;
 
-                selectedRoom = UnityEngine.Random.Range(0, possibleRooms.Count);
-                selectedRoom = possibleRooms[selectedRoom].roomId;
+                selectedRoom = possibleRooms[UnityEngine.Random.Range(0, possibleRooms.Count)].roomId;
                 layout[currentLocation.heightInGrids, currentLocation.widthInGrids] = selectedRoom;
-
-                Debug.Log(String.Format("i: {0}  j: {1}  SelectedRoom: {2}  In: {3}  Out: {4}", i, j, selectedRoom, enterDirection, exitDirection));
-
-                switch (exitDirection)
-                {
-                    case 1: currentLocation.widthInGrids--; break;
-                    case 2: currentLocation.widthInGrids++; break;
-                    case 3: currentLocation.heightInGrids--; break;
-                }
-                possibleRooms.Clear();
-                enterDirection = exitDirection;
             }
             catch (Exception ex)
             {
-                Debug.LogError(ex.Message);
             }
+            Debug.Log(String.Format("i: {0}  j: {1}  SelectedRoom: {2}  In: {3}  Out: {4}", i, j, selectedRoom, enterDirection, exitDirection));
+
+            switch (exitDirection)
+            {
+                case 1: currentLocation.widthInGrids--; break;
+                case 2: currentLocation.widthInGrids++; break;
+                case 3: currentLocation.heightInGrids--; break;
+            }
+            enterDirection = exitDirection;
         }
 
         Debug.Log("Time to generate the level: " + (DateTime.UtcNow - generationStartTime).TotalMilliseconds);

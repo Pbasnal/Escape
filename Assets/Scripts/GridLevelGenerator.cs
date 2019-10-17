@@ -15,14 +15,18 @@ public class GridLevelGenerator : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        GenerateLevel();
+        Debug.Log("Started");
+        gridRoomLayoutController.Init();
+        GenerateLevel();        
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            Debug.Log("Started");
             ClearLevel();
+            Debug.Log("Cleared");
             GenerateLevel();
         }
     }
