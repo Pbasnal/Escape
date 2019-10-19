@@ -8,7 +8,7 @@ public interface IJump
     float InitialVelocity { get; }
     //float TimeToMaxHeight { get; }
     float FallGravityMultiplier { get; }
-    Rigidbody Rigidbody { get; }
+    Rigidbody2D Rigidbody { get; }
 
     int ExtraJumps { get; set; }
 }

@@ -5,29 +5,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SpelunkyRoomLayoutGenerator", menuName = "Level Gen/Layout/SpelunkyLike", order = 51)]
 public class SpelunkyRoomLayoutGenerator : GridRoomLayoutController
 {
-    public List<Room> rooms;
-    private IDictionary<int, Room> _roomsHash;
+    public Room[] rooms;
     private List<Room> possibleRooms = new List<Room>();
-
-    public override void Init()
+    
+    public override int[,] Init(Room[] rooms, LevelSize levelSize, int defaultValue)
     {
-        _roomsHash = new Dictionary<int, Room>();
-        for (int i = 0; i < rooms.Count; i++)
-        {
-            rooms[i].roomId = i;
-            _roomsHash.Add(rooms[i].roomId, rooms[i]);
-        }
-    }
-
-    private int[,] CreateBaseLevelLayout(LevelSize levelSize)
-    {
+        this.rooms = rooms;
+        
         var layout = new int[levelSize.heightInGrids, levelSize.widthInGrids];
 
         for (int i = 0; i < levelSize.heightInGrids; i++)
         {
             for (int j = 0; j < levelSize.widthInGrids; j++)
             {
-                layout[i, j] = -1;
+                layout[i, j] = defaultValue;
             }
         }
         return layout;
@@ -71,14 +62,13 @@ public class SpelunkyRoomLayoutGenerator : GridRoomLayoutController
         return possibleRooms;
     }
 
-    public override int[,] GenerateRoomLayout(LevelSize levelSize)
+    public override int[,] GenerateRoomLayout(int[,] layout, LevelSize levelSize, LevelSize startingLocation)
     {
-        var layout = CreateBaseLevelLayout(levelSize);
         int enterDirection = 0;
         var currentLocation = new LevelSize
         {
-            heightInGrids = levelSize.heightInGrids - 1,
-            widthInGrids = UnityEngine.Random.Range(0, levelSize.widthInGrids)
+            heightInGrids = startingLocation.heightInGrids,
+            widthInGrids = startingLocation.widthInGrids
         };
 
         var directions = GetDirectionsMap();
@@ -122,14 +112,5 @@ public class SpelunkyRoomLayoutGenerator : GridRoomLayoutController
 
         Debug.Log("Time to generate the level: " + (DateTime.UtcNow - generationStartTime).TotalMilliseconds);
         return layout;
-    }
-
-    public override GameObject GetRoom(int roomId)
-    {
-        if (roomId == -1)
-        {
-            return rooms[UnityEngine.Random.Range(0, rooms.Count)].GetARoom();
-        }
-        return _roomsHash[roomId].GetARoom();
     }
 }

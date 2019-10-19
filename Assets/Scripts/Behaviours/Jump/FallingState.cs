@@ -30,7 +30,7 @@ public class FallingState : IBehaviourState<IJump, JumpStates>
         }
         else
         {
-            jumper.Rigidbody.velocity += Vector3.up * Physics2D.gravity.y * jumper.FallGravityMultiplier * Time.deltaTime;
+            jumper.Rigidbody.velocity += Vector2.up * Physics2D.gravity.y * jumper.FallGravityMultiplier * Time.deltaTime;
         }
     }
 }

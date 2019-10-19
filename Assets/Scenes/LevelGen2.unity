@@ -177,6 +177,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelSize: {fileID: 11400000, guid: b0130bb4abb37644a853440cc80f29b6, type: 2}
+  roomPrefabs:
+  - room: {fileID: 11400000, guid: 145a7a7decc2a8e41b5307b8fad35568, type: 2}
+    roomPrefabs:
+    - {fileID: 9065064448983832012, guid: f57d6f3fe5c695946a70c5ae27387828, type: 3}
+    - {fileID: 5282025825129024128, guid: e605d70b680787d42b8dc14d103ff0c5, type: 3}
+    - {fileID: 4313068676637538845, guid: fab00bd71fbc8f546804c5d603c1f4ef, type: 3}
+  - room: {fileID: 11400000, guid: 8d9d0f06b466e7e40be833eba144843d, type: 2}
+    roomPrefabs:
+    - {fileID: 2098264063141799077, guid: 75810d7503f749d4d9feeffaded35c6b, type: 3}
+    - {fileID: 219552883569217907, guid: 71f8c7f75c935884899b25d3955399af, type: 3}
+    - {fileID: 4654090483646362493, guid: 855d6772f859d7040a71bfcaf9c71e04, type: 3}
+    - {fileID: 2182664062840847881, guid: e1804572121200a429a91b6abc04ccbf, type: 3}
+  - room: {fileID: 11400000, guid: b11a0b0b57aa58c4d8d8f68fb2111045, type: 2}
+    roomPrefabs:
+    - {fileID: 2251884686710468186, guid: 22540bf2866e09941b7a40a679ba03d0, type: 3}
+    - {fileID: 6074560873100298247, guid: ad494388a5071914a992be4661839773, type: 3}
+    - {fileID: 2784622889610413836, guid: 1363cce40ab436d4da237bfc4c35b2ab, type: 3}
+  - room: {fileID: 11400000, guid: fb3160174c8efd240a1f31c27adeee1e, type: 2}
+    roomPrefabs:
+    - {fileID: 2866049521664760929, guid: ba4c7ba158c992c4091b340b9a5ac093, type: 3}
+    - {fileID: 4303098694024849323, guid: 928859f4caba49e42b5787201685ab83, type: 3}
+  - room: {fileID: 11400000, guid: 1ff899515c5edc14db28e615f916dbfb, type: 2}
+    roomPrefabs:
+    - {fileID: 2866049521664760929, guid: ba4c7ba158c992c4091b340b9a5ac093, type: 3}
+    - {fileID: 4303098694024849323, guid: 928859f4caba49e42b5787201685ab83, type: 3}
+    - {fileID: 9065064448983832012, guid: f57d6f3fe5c695946a70c5ae27387828, type: 3}
+    - {fileID: 5282025825129024128, guid: e605d70b680787d42b8dc14d103ff0c5, type: 3}
+    - {fileID: 4313068676637538845, guid: fab00bd71fbc8f546804c5d603c1f4ef, type: 3}
+    - {fileID: 2098264063141799077, guid: 75810d7503f749d4d9feeffaded35c6b, type: 3}
+    - {fileID: 219552883569217907, guid: 71f8c7f75c935884899b25d3955399af, type: 3}
+    - {fileID: 4654090483646362493, guid: 855d6772f859d7040a71bfcaf9c71e04, type: 3}
+    - {fileID: 2182664062840847881, guid: e1804572121200a429a91b6abc04ccbf, type: 3}
+    - {fileID: 2251884686710468186, guid: 22540bf2866e09941b7a40a679ba03d0, type: 3}
+    - {fileID: 6074560873100298247, guid: ad494388a5071914a992be4661839773, type: 3}
+    - {fileID: 2784622889610413836, guid: 1363cce40ab436d4da237bfc4c35b2ab, type: 3}
+  defaultRoomId: 0
+  player: {fileID: 1387714345280371694, guid: c4a9328264a93144bb2c2cec783cd5ae, type: 3}
+  mainCamera: {fileID: 1179849171}
   gridRoomLayoutController: {fileID: 11400000, guid: 7dea25c4d59678c40a70023d61c14b1d,
     type: 2}
   mainPathMarker: {fileID: 6774195401708739491, guid: a6f5a00629aa6404f8dee56ba43f325c,
@@ -234,7 +272,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 30
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

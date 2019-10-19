@@ -13,21 +13,21 @@ public class MovementController : MonoBehaviour, IMove
     public float TimeToMaxVelocitySec => timeToMaxVelocitySec;
     public float TimeToZeroVelocitySec => timeToZeroVelocitySec;
     public Transform Transform => gameObject.transform;
-    public Rigidbody Rigidbody => m_rigidbody;
+    public Rigidbody2D Rigidbody => m_rigidbody;
     public MovementState CurrentState
     {
         get { return currentState; }
         set { currentState = value; }
     }
 
-    public Vector3 PreviousVelocity
+    public Vector2 PreviousVelocity
     {
         get { return m_previousVelocity; }
         set { m_previousVelocity = value; }
     }
 
-    private Rigidbody m_rigidbody;
-    private Vector3 m_previousVelocity;
+    private Vector2 m_previousVelocity;
+    private Rigidbody2D m_rigidbody;
     private BehaviourStateMachine<IMove, MovementState> movementMachine;
 
     void Awake()
@@ -42,7 +42,7 @@ public class MovementController : MonoBehaviour, IMove
 
         movementMachine.ChangeState(MovementState.NotMoving);
 
-        m_rigidbody = gameObject.GetComponent<Rigidbody>();
+        m_rigidbody = gameObject.GetComponent<Rigidbody2D>();
     }
 
     void FixedUpdate()

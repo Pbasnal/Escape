@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public abstract class GridRoomLayoutController : ScriptableObject
 {
-    public abstract void Init();
-    public abstract int[,] GenerateRoomLayout(LevelSize levelSize);
-    public abstract GameObject GetRoom(int roomId);
+    public abstract int[,] Init(Room[] rooms, LevelSize levelSize, int defaultValue);
+    public abstract int[,] GenerateRoomLayout(int[,] layout, LevelSize levelSize, LevelSize startingLocation);
 }

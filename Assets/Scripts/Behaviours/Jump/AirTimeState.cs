@@ -30,7 +30,7 @@ public class AirTimeState : IBehaviourState<IJump, JumpStates>
         }
         else
         {
-            jumper.Rigidbody.velocity -= Vector3.up * gravity * Time.deltaTime;
+            jumper.Rigidbody.velocity -= Vector2.up * gravity * Time.deltaTime;
         }
     }
 }

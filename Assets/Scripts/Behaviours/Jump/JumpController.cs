@@ -12,14 +12,14 @@ public class JumpController : MonoBehaviour, IJump
     //public float timeToMaxHeight;
     public float initialVelocity;
     public int extraJumps;    
-    public new Rigidbody rigidbody;
+    public new Rigidbody2D rigidbody;
 
     public JumpStates currentState;
 
     public int MaxExtraJumps => maxExtraJumps;
     public float JumpHeight => jumpHeight;
 //    public float JumpPower => jumpPower;
-    public Rigidbody Rigidbody => rigidbody;
+    public Rigidbody2D Rigidbody => rigidbody;
 
     public int ExtraJumps
     {
@@ -45,7 +45,7 @@ public class JumpController : MonoBehaviour, IJump
 
         jumpMachine.ChangeState(JumpStates.OnGround);
 
-        rigidbody = gameObject.GetComponent<Rigidbody>();
+        rigidbody = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Start is called before the first frame update

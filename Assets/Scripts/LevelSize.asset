@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edd5773d54ade7e4ba6f5dd1b2c9bcf9, type: 3}
   m_Name: LevelSize
   m_EditorClassIdentifier: 
-  heightInGrids: 5
-  widthInGrids: 5
+  heightInGrids: 4
+  widthInGrids: 4

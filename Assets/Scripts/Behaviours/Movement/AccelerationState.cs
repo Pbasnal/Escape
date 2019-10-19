@@ -22,8 +22,9 @@ public class AccelerationState : IBehaviourState<IMove, MovementState>
     {
         var h = Input.GetAxisRaw("Horizontal");
         var v = Input.GetAxisRaw("Vertical");
-        var tr = gameObject.Transform;
-        gameObject.PreviousVelocity += (tr.up * m_accel * v + tr.right * m_accel * h) * Time.deltaTime;
+        Vector2 up = gameObject.Transform.up;
+        Vector2 right = gameObject.Transform.right;
+        gameObject.PreviousVelocity += (up * m_accel * v + right * m_accel * h) * Time.deltaTime;
 
         if (h == 0 && v == 0)
         {
@@ -35,7 +36,7 @@ public class AccelerationState : IBehaviourState<IMove, MovementState>
         }
         else
         {
-            gameObject.Rigidbody.MovePosition(gameObject.Transform.position + gameObject.PreviousVelocity);
+            gameObject.Rigidbody.MovePosition((Vector2)gameObject.Transform.position + gameObject.PreviousVelocity);
         }
     }
 }
