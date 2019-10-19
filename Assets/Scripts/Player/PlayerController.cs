@@ -7,13 +7,18 @@ public class PlayerController : MonoBehaviour
     public float gravity;
     public float fallGravity;
     public Vector3 velocity;
+    public LayerMask groundLayer;
+    public int extraJumps = 1;
 
+    private float disstanceToTheGround;
     private new Rigidbody2D rigidbody;
-    private bool hasJumped = false;
+    private int jumpCount = 0;
+
 
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        disstanceToTheGround = GetComponent<BoxCollider2D>().bounds.extents.y;
     }
 
     private void Start()
@@ -27,9 +32,9 @@ public class PlayerController : MonoBehaviour
 
         rigidbody.velocity = new Vector3(h * moveSpeed, rigidbody.velocity.y);
 
-        if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
+        if (Input.GetKeyDown(KeyCode.Space) && (IsGrounded() || jumpCount < extraJumps))
         {
-            hasJumped = !hasJumped;
+            jumpCount++;
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpSpeed);
         }
 
@@ -41,13 +46,27 @@ public class PlayerController : MonoBehaviour
         {
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, rigidbody.velocity.y - (fallGravity * Time.deltaTime));
         }
-        else
-        {
-            hasJumped = true;
-        }
 
         velocity = rigidbody.velocity;
+        DebugCasts();
     }
+
+    private void DebugCasts()
+    {
+        Debug.DrawRay(transform.position, Vector2.down, Color.green);
+    }
+
+    private bool IsGrounded()
+    {
+        var hit = Physics2D.Raycast(transform.position, Vector2.down, disstanceToTheGround + 0.1f);
+        if (hit.collider == null)
+        {
+            jumpCount = 0;
+        }
+
+        return hit.collider != null;
+    }
+
 
     private void FixedUpdate()
     {

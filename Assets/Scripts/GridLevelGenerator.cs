@@ -15,8 +15,9 @@ public class GridLevelGenerator : MonoBehaviour
     public RoomPrefabs[] roomPrefabs;
     public int defaultRoomId;
     public GameObject player;
+    public GameObject wall;
 
-    public Camera mainCamera;
+    public Cinemachine.CinemachineVirtualCamera camera;
 
     public GridRoomLayoutController gridRoomLayoutController;
     public GameObject mainPathMarker;
@@ -116,6 +117,29 @@ public class GridLevelGenerator : MonoBehaviour
                 marker.transform.parent = room.transform;
             }
         }
+        GenerateWalls();
+    }
+
+    private void GenerateWalls()
+    {
+        var scale = levelSize.heightInGrids * _cellSize.x;
+
+        var ground = Instantiate(wall, transform);
+        var roof = Instantiate(wall, transform);
+        var leftWall = Instantiate(wall, transform);
+        var rightWall = Instantiate(wall, transform);
+
+        ground.transform.position = new Vector3(transform.position.x - 5, transform.position.y - 14.5f, 0);
+        ground.transform.localScale = new Vector3(scale, 1, 1);
+
+        roof.transform.position = new Vector3(transform.position.x - 5, transform.position.y + 25f, 0);
+        roof.transform.localScale = new Vector3(scale, 1, 1);
+
+        leftWall.transform.position = new Vector3(transform.position.x - 24.5f, transform.position.y + 5, 0);
+        leftWall.transform.localScale = new Vector3(1, scale, 1);
+
+        rightWall.transform.position = new Vector3(transform.position.x + 14.5f, transform.position.y + 5, 0);
+        rightWall.transform.localScale = new Vector3(1, scale, 1);
     }
 
     private void SpawnPlayer()
@@ -137,8 +161,8 @@ public class GridLevelGenerator : MonoBehaviour
 
         var spawnedPlayer = Instantiate(player, spawnPoint.position, Quaternion.identity);
         spawnedPlayer.transform.parent = transform;
-        mainCamera.transform.position = new Vector3(spawnedPlayer.transform.position.x, spawnedPlayer.transform.position.y, mainCamera.transform.position.z);
-        mainCamera.transform.parent = spawnedPlayer.transform;
+
+        camera.Follow = spawnedPlayer.transform;
     }
 
     private GameObject GetARoomPrefab(int roomId)
