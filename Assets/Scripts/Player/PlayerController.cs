@@ -9,11 +9,11 @@ public class PlayerController : MonoBehaviour
     public Vector3 velocity;
     public LayerMask groundLayer;
     public int extraJumps = 1;
+    public PlayerStats playerStats;
 
     private float disstanceToTheGround;
     private new Rigidbody2D rigidbody;
     private int jumpCount = 0;
-
 
     private void Awake()
     {
@@ -23,11 +23,12 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        playerStats.Reset();
     }
 
     private void Update()
     {
-        var h = Input.GetAxis("Horizontal");
+        var h = Input.GetAxisRaw("Horizontal");
         var v = Input.GetAxis("Vertical");
 
         rigidbody.velocity = new Vector3(h * moveSpeed, rigidbody.velocity.y);
@@ -58,9 +59,10 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        var hit = Physics2D.Raycast(transform.position, Vector2.down, disstanceToTheGround + 0.1f);
+        var hit = Physics2D.Raycast(transform.position, Vector2.down, disstanceToTheGround + 0.1f, groundLayer);
         if (hit.collider == null)
         {
+            rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0);
             jumpCount = 0;
         }
 

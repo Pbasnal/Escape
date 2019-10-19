@@ -79,6 +79,8 @@
     <Compile Include="Assets\Scripts\Behaviours\Movement\MovementController.cs" />
     <Compile Include="Assets\Scripts\Behaviours\Movement\MovementState.cs" />
     <Compile Include="Assets\Scripts\Behaviours\Movement\NotMovingState.cs" />
+    <Compile Include="Assets\Scripts\DamagePlayerHealth.cs" />
+    <Compile Include="Assets\Scripts\GiveGoldToPlayer.cs" />
     <Compile Include="Assets\Scripts\GridLevelGenerator.cs" />
     <Compile Include="Assets\Scripts\GridRoomLayoutController.cs" />
     <Compile Include="Assets\Scripts\Guards\AlertPatrol.cs" />
@@ -88,6 +90,8 @@
     <Compile Include="Assets\Scripts\Guards\GuardSimple.cs" />
     <Compile Include="Assets\Scripts\LevelSize.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerStats.cs" />
+    <Compile Include="Assets\Scripts\ProbabilitySpawn.cs" />
     <Compile Include="Assets\Scripts\Rooms\Room.cs" />
     <Compile Include="Assets\Scripts\Rooms\RoomGenerator.cs" />
     <Compile Include="Assets\Scripts\Rooms\RoomLR.cs" />
