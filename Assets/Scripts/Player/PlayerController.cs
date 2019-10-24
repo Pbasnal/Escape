@@ -33,7 +33,8 @@ public class PlayerController : MonoBehaviour
 
         rigidbody.velocity = new Vector3(h * moveSpeed, rigidbody.velocity.y);
 
-        if (Input.GetKeyDown(KeyCode.Space) && (IsGrounded() || jumpCount < extraJumps))
+
+        if (Input.GetKeyDown(KeyCode.Space) && (IsGrounded() || jumpCount <= extraJumps))
         {
             jumpCount++;
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpSpeed);
@@ -60,13 +61,15 @@ public class PlayerController : MonoBehaviour
     private bool IsGrounded()
     {
         var hit = Physics2D.Raycast(transform.position, Vector2.down, disstanceToTheGround + 0.1f, groundLayer);
-        if (hit.collider == null)
+        if (hit.collider != null)
         {
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0);
             jumpCount = 0;
+
+            return true;
         }
 
-        return hit.collider != null;
+        return false;
     }
 
 
