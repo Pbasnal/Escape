@@ -1,8 +1,7 @@
 {
     "name": "LevelGenerator",
     "references": [
-        "GUID:bf834cf51e248f942864981372d4ced2",
-        "GUID:efa45043feb7e4147a305b73b5cea642"
+        "GUID:bf834cf51e248f942864981372d4ced2"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
