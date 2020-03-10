@@ -1,0 +1,20 @@
+{
+    "name": "RoomBuilderEditor",
+    "references": [
+        "GUID:f1e3482ffd79ffa409b780122b87b72a",
+        "GUID:bf834cf51e248f942864981372d4ced2"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
